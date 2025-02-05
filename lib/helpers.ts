@@ -1,11 +1,12 @@
 "use server"
+import { revalidatePath } from "next/cache"
 import { connect } from "mongoose"
-import { Campaign } from "./types";
-import CampaignModel from "../Models/Campaign.model";
+import { Campaign } from "./types"
+import CampaignModel from "./Campaign.model"
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-var
-  var mongoose: any;
+  var mongoose: any
 }
 
 let cached = global.mongoose
@@ -62,4 +63,12 @@ export const editCampaign = async (data: Campaign) => {
         console.error("error in editing Campaign =", error)
         return false
     }
+}
+
+export const getData = async () => {
+  await dbConnect()
+
+  const campaigns = await CampaignModel.find().lean<Campaign[]>()
+  revalidatePath("/")
+  return campaigns
 }

@@ -1,14 +1,17 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Campaign } from '@/lib/Helpers/types';
-import Row from './TableRow';
+"use client"
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import Row from './TableRow'
+import { useCampaignsContext } from './Context'
 
-export default function CampaignTable ({ data }: { data: unknown[] }) {
+export default function CampaignTable () {
+    const { data } = useCampaignsContext()
+
     return (
         <TableContainer component={Paper} sx={{ mt: 4 }}>
             <Table stickyHeader sx={{ minWidth: 650 }}>
@@ -24,7 +27,7 @@ export default function CampaignTable ({ data }: { data: unknown[] }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((campaign, idx) => <Row row={campaign as Campaign} key={idx} id={idx + 1} />)}
+                    {data.map((campaign, idx) => <Row row={campaign} key={idx} id={idx + 1} />)}
                 </TableBody>
             </Table>
         </TableContainer>

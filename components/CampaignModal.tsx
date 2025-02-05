@@ -1,18 +1,20 @@
 "use client"
-import { useState } from "react";
-import dayjs from "dayjs";
-import { Box, Backdrop, Button, Fade, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import SaveIcon from '@mui/icons-material/Save';
-import { Campaign, days } from "@/lib/Helpers/types"
-import { createCampaign, editCampaign } from "@/lib/Helpers";
+import { useState } from "react"
+import dayjs from "dayjs"
+import { Box, Backdrop, Button, Fade, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material"
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import SaveIcon from '@mui/icons-material/Save'
+import { Campaign, days } from "@/lib/types"
+import { createCampaign, editCampaign, getData } from "@/lib/helpers"
+import { useCampaignsContext } from "./Context"
 
 export default function CampaignModal({ open, handleClose, data }: { open: boolean, handleClose: () => void, data?: Campaign }) {
     const [loading, setLoading] = useState(false)
+    const { setData } = useCampaignsContext()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -35,8 +37,13 @@ export default function CampaignModal({ open, handleClose, data }: { open: boole
 
         const result = data ? await editCampaign(SubmittedData) : await createCampaign(SubmittedData)
 
-        if (result)
+        if (result) {
+            (async function () {
+                const list = await getData()
+                setData(list)
+            })()
             cancelCreation()
+        }
 
         setLoading(false)
     }
