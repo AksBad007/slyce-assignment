@@ -43,7 +43,10 @@ export default function Row({ row, id }: { row: Campaign, id: number }) {
 
                 if (start_time) {
                     const finalDate = new Date(sampleDate.setDate(sampleDate.getDate() + (startDay <= i ? (i - startDay) : (1 + i))))
-                    msg = `${dateSchedule(finalDate)} at ${timeSchedule(start_time)}`
+
+                    if (finalDate <= end_date)
+                        msg = `${dateSchedule(finalDate)} at ${timeSchedule(start_time)}`
+
                     break
                 }
             }
